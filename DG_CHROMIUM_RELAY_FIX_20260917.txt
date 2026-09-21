@@ -1,0 +1,26 @@
+DG Chromium Relay 修正版（2026-09-17）
+
+目的：
+- 不再讓 MT Assistant 瀏覽器直接連 DG vendor WSS。
+- Render 後端先以真正 Headless Chromium 開啟 DG direct1.html。
+- DG 原始頁面自己完成 direct1 -> index、Origin、type、sign 與 WebSocket 啟動。
+- 後端透過 Chrome DevTools Protocol 只鏡像「收到的 DG Binary WebSocket frame」，沿用原本 PublicBean 解析與牌路 UI。
+- Chromium 無法啟動時才退回既有 Node WSS relay。
+
+部署：
+- 仍可用原本 Render Node Web Service。
+- Build Command 保持：pnpm install --frozen-lockfile && pnpm build
+- Start Command 保持：pnpm start
+- package.json postinstall 會在 Linux x64、且系統無 Chrome 時，把 Google Chrome stable 解壓至專案 .chrome 目錄。
+- 可用 DG_CHROME_PATH 指定自訂 Chrome 執行檔。
+
+正常 Log 應依序看到：
+1. [DG relay] Chromium｜Chromium 已啟動
+2. [DG relay] Chromium｜Chromium 已導航至 DG direct1
+3. [DG relay] Chromium｜Chromium WSS 建立：...
+4. [DG relay] Chromium｜Chromium WebSocket 101：...
+5. [DG relay] 驗證完成｜...｜mode=browser
+6. [DG relay] 已同步真人桌：N 桌
+
+若 Chromium 仍收到 503：
+- 代表已經排除 Node TLS/手工 WebSocket 握手差異，問題更可能落在 Render 出口網路/IP 或 DG 伺服器端限制。

@@ -1,0 +1,28 @@
+DG browser-first fix (2026-09-17)
+
+Root cause found in previous build:
+- lib/dg-live.ts contained browser-direct DG code, but connectDgLive() never called it.
+- Normal web always used /api/dg/start => Render relay.
+- Render had already shown DG 503/handshake failures, so the UI could stay in a reauthorize/connect loop.
+- app/index.tsx also replaced every loading/connecting detail with generic "連線中...", hiding which host/stage failed.
+
+This build:
+1. Normal web now tries the user's browser network FIRST.
+2. Latest HAR-verified wss://newappa0.ywjxi.com is prioritized with DG line2/line3/line4 candidates.
+3. Browser-direct waits for cmd 10086 codeId=0 before declaring connected.
+4. 6.5s auth-response watchdog after WebSocket open; no infinite "connected socket but no auth reply" state.
+5. After each candidate fails, UI shows the actual current/next hostname.
+6. After browser candidates fail once, it falls back once to the Render relay.
+7. Render relay now also has a post-101 authentication watchdog.
+8. Removed the silent handshake-error => clear gameUrl => reauthorize loop from the UI.
+9. UI now displays the real DG connection stage/message instead of generic "連線中...".
+
+Latest HAR evidence used:
+- Origin: https://new-dd-cn.20299999.com
+- Failed/unused path observed: appatw.kindlestone.com
+- Successful WebSocket: wss://newappa0.ywjxi.com/?sign=...
+- HTTP status: 101 Switching Protocols
+- Init send order: 10086 -> 45 -> 2(lobbyId=5) -> 5011 -> 87 -> 24
+- cmd 1004: road update
+- cmd 1002: table live update
+- cmd 2: lobby table snapshot

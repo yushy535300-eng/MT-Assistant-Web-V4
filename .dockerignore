@@ -1,0 +1,12 @@
+node_modules
+web-dist
+dist
+.chrome
+.expo
+.git
+.data
+*.log
+.env
+.env.*
+android-tz-wrapper/.gradle
+android-tz-wrapper/build

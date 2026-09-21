@@ -1,0 +1,80 @@
+message Dealer {
+    optional uint64 id=1;
+    optional string name=2;
+    optional string no=3;
+    optional string photo=4;
+    optional int32 gender=5;
+    optional bool online=6;//是否在线
+    optional int32 tableId=7;//当前所在桌号
+    optional int32 state=8;//dealer 类型
+    optional int32 type=9;//dealer 类型
+}
+
+message Table {
+    optional uint32 tableId=1;//桌号  
+    optional uint64 shoeId=2;//靴号 
+    optional uint64 playId=3;//局号
+    optional int32 state=4;//状态
+    optional int32 countDown=5;//倒计时秒数
+    optional string result=6;//游戏结果
+    optional string poker=7;//牌信息
+    repeated string tel = 8;
+    repeated string ext = 9;
+    repeated string roads = 10;
+    optional string gameNo=11;
+    optional string fms=12;
+    optional string tableName=13;
+    optional string vipName=14;
+    optional int32 totalAmount=15;//状态
+    optional int32 onlineCount=16;//倒计时秒数
+    optional Dealer dealer=17;
+    optional int32 gameId=18;//游戏id
+    optional Dealer anchor=19;
+}
+
+message Virtual { 
+    optional int32 seatId=1; //座位号
+    optional string userName=2;
+    optional string currency=3;
+    optional string betInfo=4;
+    optional double balance=5;
+    optional int32 type=6;//common,7s,vip	
+    optional uint64 mid=7;//会员id
+    optional uint32 streak=8;//当前连胜场次
+    optional uint64 betNum=9;//下注总场次
+    optional uint64 winNum=10;//赢的场次
+    optional string head=11;//会员头像
+    optional uint32 deviceType=12;//设备类型
+    repeated string list = 13;//备用，扩展用
+}	
+
+message LobbyPush { 
+     optional uint32 tableId=1;
+     optional uint64 onlineCount=2;//在线人数
+     optional uint64 totalAmount=3;//下注总额 
+     optional string vipName=4;
+     optional bool seatFull=5;//坐满，没位
+}	
+
+message PublicBean {    
+     required int32 cmd = 1;// 指令  
+     optional string token = 2;// token    
+     optional int32 codeId=3;//错误编号 
+     optional int32 lobbyId=4;//大厅号
+     optional string gameNo=5;//游戏局号
+     optional int32 tableId=6;//桌号
+     optional int32 seat=7;//座位号    
+     optional int64 mid = 8;// 会员id 
+     repeated double dList = 9; //余额 
+     optional int32 type = 10; // 类型
+     optional string userName=11;//用户名
+     repeated string list = 12;//(桌信息，下注详细 等等)
+     repeated int64 mids=13;//会员ID列表 
+     optional string object=14;//不知类型扩展(桌信息，下注详细 等等)
+     repeated Virtual virtual=15;
+     repeated LobbyPush lobbyPush=16;     
+     repeated Table table=17;
+
+
+
+}

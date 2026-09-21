@@ -1,0 +1,9 @@
+DG WebSocket 503 修正（2026-09-17）
+
+1. 依 DG 遊戲頁成功 HAR 校正 WebSocket 完整網址格式。
+2. sign 維持 TripleDES-ECB-PKCS7 動態計算，不寫死使用者 Token 或一次性簽章。
+3. 修正 sign 被 encodeURIComponent 轉成 %2F／%3D 的問題。
+4. WebSocket Query 現在保留 DG 原頁使用的 Base64 `/`、`+`、`=` 原字元。
+5. 保留既有單一 Session、SSE、牌路解析與前景共用連線架構。
+6. 未修改 MT 連線、策略、統計及「今日輸贏」。
+7. 進入／離開 DG 時不再由前端強制把懸浮狀態設為 OFFLINE；狀態只依後端 relay 的真實 SSE 回報更新。

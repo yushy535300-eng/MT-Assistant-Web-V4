@@ -1,0 +1,8 @@
+DG road sync + speed fix 2026-09-17
+
+1. Fix startup event ordering: cmd=1004 may arrive before cmd=2/cmd=44 table snapshot.
+   The newest full road list is now queued and merged into the initial table snapshot,
+   preventing some tables from being exactly one result behind DG.
+2. DG authorization and Chromium relay now pre-warm in the background after login.
+3. Switching MT <-> DG no longer tears down the DG relay, so repeated switching is fast.
+4. Existing MT logic/UI and locked 今日輸贏 logic are not changed.

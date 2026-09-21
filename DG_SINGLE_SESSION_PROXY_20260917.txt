@@ -1,0 +1,20 @@
+DG 單工作階段純網頁版（2026-09-17）
+
+本版只修改 DG，MT 流程未更動。
+
+DG 行為：
+1. 牌路主頁維持原本 Render Chromium 自動抓 DG 牌路。
+2. 按「DG平台」時，先停止背景 Chromium 的 DG WebSocket，保留既有 relay / SSE / 牌路快照。
+3. DG 遊戲改由同網站內建的 same-origin proxy 載入，不需要 Chrome 擴充功能。
+4. DG 頁面建立自己的 WebSocket 時，瀏覽器只連本站 /api/dg/game-ws；伺服器再以原 DG Origin 連上真正 DG WSS。
+5. 同一條 foreground DG WSS 的 server binary frame 同時送回 DG 遊戲及既有牌路解析器，因此懸浮輔助與 DG 使用同一個 session / 同一份即時資料。
+6. 按「回牌路」後，foreground proxy 關閉，背景 DG relay 自動恢復。
+
+安全／隔離：
+- Proxy 只在登入中的 tracker session 啟用。
+- 只接受 HTTPS DG 啟動網址與 WSS 公網目標，拒絕 localhost / 私有網段。
+- MT WebSocket、MT login、MT 平台入口、MT 牌路邏輯沒有修改。
+
+Render：
+Build Command 維持：pnpm install --frozen-lockfile && pnpm build
+Start Command 維持：pnpm start

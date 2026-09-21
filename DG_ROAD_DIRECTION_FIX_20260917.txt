@@ -1,0 +1,7 @@
+DG road direction fix
+
+- Confirmed from the latest captured DG HAR + DG screen: roads/list arrives newest -> oldest.
+- Normalize to oldest -> newest before winner mapping.
+- Rebuild Bead Plate, Big Road and all derived roads from chronological results.
+- No CSS mirroring.
+- MT path unchanged.

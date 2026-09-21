@@ -1,0 +1,21 @@
+---
+description: Freeze AB/MT/DG as working baselines. Do not change them unless the user reports a new bug on that exact platform.
+alwaysApply: true
+---
+
+# Platform freeze: AB + MT + DG
+
+AB（歐博）、MT、DG 都已是使用者認可的工作基準。不要為了整理、共用、順便修、或幫忙 DB 而改到它們。
+
+**凍結快照（使用者 2026-09-21 認可可玩）**：歐博進桌走官方 AB01/login 自動轉點；F5 才 reuse session；今日輸贏只在 `enterGameTable` 坐著的那桌開出莊閒後抓一次 betLog，禁止輪詢。
+
+## Do not touch unless they report a new bug on that same platform
+
+- **AB（歐博）**：連線、proxy、進桌／進遊戲、pause/resume、大廳桌台、auto-connect、float、錢包轉點、今日輸贏抓報時機。
+- **MT / DG**：連線、路紙、今日輸贏、進桌／進遊戲、標題、WebSocket，以及相關 UI／狀態。
+
+未明確回報該平台新 bug 時：不要改原始碼、不要重構、不要重啟伺服器。
+
+## Remaining work
+
+只在使用者明確要求時處理 **DB 進桌 / WAF**。不要用 MT／DG／AB 的實作去「對齊」DB。

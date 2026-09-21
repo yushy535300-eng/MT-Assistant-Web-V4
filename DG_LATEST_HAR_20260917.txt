@@ -1,0 +1,45 @@
+DG latest HAR verification (2026-09-17)
+
+Source capture: new-dd-cn.20299999.com(2).har
+
+Confirmed successful WebSocket:
+- Origin: https://new-dd-cn.20299999.com
+- WSS: wss://newappa0.ywjxi.com/?sign=...
+- HTTP status: 101 Switching Protocols
+- Captured WebSocket messages: 1494
+
+Confirmed DG bootstrap commands from the successful connection:
+1. send cmd 10086, tableId=1, type=0, object=PC
+2. send cmd 45, type=1
+3. send cmd 2, lobbyId=5, type=0
+4. send cmd 5011, type=0
+5. send cmd 87, type=1
+6. send cmd 24, type=2
+
+Confirmed live data commands:
+- cmd 2: lobby table snapshot. Lobby 5 contained 16 tables, 13 with gameId=1 (baccarat).
+- cmd 1002: live table update (tableId/playId/countDown/result/poker etc.).
+- cmd 1004: full baccarat road list. tableId + repeated list strings such as #1#0#8.
+- cmd 29: FLV live stream URL.
+- cmd 44: table snapshot/details.
+
+Baccarat tables observed in the cmd 2 snapshot:
+60101 BAC001 RB01
+60102 BAC002 RB02
+60103 BAC003 RB03
+60104 BAC004 RB04
+60105 BAC005 RB05
+50101 TID348 S01
+50102 TID349 S02
+50103 TID350 S03
+50104 TID351 S05
+50105 TID352 S06
+50106 TID354 S07
+50107 TID77842 S09
+50108 TID77846 S10
+
+Important implementation change:
+- Do not force appatw.kindlestone.com or one regional type.
+- Read every valid wss:// endpoint from DG game_settings.json and try all candidates.
+- For the current new-dd-cn.20299999.com origin, newappa0.ywjxi.com is placed early because this exact capture proved HTTP 101 success.
+- The relay still validates endpoint host suffixes and keeps the launch Origin dynamic.

@@ -1,0 +1,21 @@
+MT + DG 整合版（2026-09-17）
+
+本版重點：
+1. 登入 MT Assistant 時只登入 TZ/OFA，不呼叫 MTLI/login、DGLI/login。
+   - 避免剛進牌路主頁就觸發平台自動轉點。
+2. MT平台 / DG平台：只有使用者真正按下平台按鈕時，才向 TZ/OFA 取得該平台 game_url。
+3. MT：取得新 MT token 後才建立主牌路 WebSocket，沿用原 MT 單一 authenticate 連線方式。
+4. DG：使用真正 DG 原生 iframe；背景牌路 Relay 若因遊戲登入被踢，回到牌路主頁後會自動重新授權恢復。
+5. DG Chromium：登入後只預熱 Chromium process，不進 DG、不拿 DGLI token、不觸發轉點。
+6. 牌路主頁連線狀態只顯示「連線中 / 已連線」。
+7. 一鍵轉回主錢包：只放牌路主頁上方 MT/DG 切換區旁。
+   - 尚未真正進過 MT/DG：灰色不可按。
+   - 進過平台後：可按。
+   - API：POST /api/v1/user/wallet，body {"s":"all","t":0}
+   - 0 點時顯示「目前無可轉回點數」。
+8. 轉回成功後停止 DG 背景重新登入，避免 DGLI 自動把主錢包點數又拉回 DG。
+9. DG roads 維持已確認規則：原始 newest->oldest，先 reverse 成 oldest->newest，再重建珠盤、大路與下三路。
+10. 不修改既有「今日輸贏」邏輯。
+
+Render Build Command 維持：
+pnpm install --frozen-lockfile && pnpm build

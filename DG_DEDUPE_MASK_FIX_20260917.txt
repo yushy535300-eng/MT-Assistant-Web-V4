@@ -1,0 +1,23 @@
+MT + DG 修正紀錄｜2026-09-17
+
+本版針對 Render Log 已確認的 DG「重複 start 把自己停止」問題修正：
+
+1. /api/dg/start 改為同一 tracker session 冪等。
+   - connecting / connected 狀態收到重複 start：直接沿用現有 relay。
+   - 不再 stop 已連線或正在連線的 Chromium。
+   - 只有 error / closed，或手動「重新連線」先呼叫 /api/dg/stop，才建立新 relay。
+
+2. React DG effect cleanup 只關閉本機 SSE listener。
+   - 不再因 dgGameUrl / effect 重新掛載而呼叫 /api/dg/stop。
+   - 登出、授權失效、手動重新連線才真正停止 server relay。
+
+3. Chromium 20 秒未取得 101 改成「診斷提示」，不再當成失敗。
+   - 實際 Log 已出現 20 秒後才建立 WSS 的情況。
+   - 20 秒後繼續等待；45 秒仍未取得 101 才回報真正失敗。
+
+4. 牌路連線中心全部網址打碼且唯讀。
+   - MT WebSocket、MT 授權 URL、DG 授權 URL 都只顯示遮罩內容。
+   - 不顯示真實 host/path/token/sign/query value。
+   - 使用者無法修改。
+
+5. 主頁 MT / DG 自動連線、DG 牌路方向修正、轉回主錢包等既有功能維持。

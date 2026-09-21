@@ -1,0 +1,18 @@
+MT + DG 修正：DG 進遊戲斷線 + 閒置黑畫面
+
+1. DG 平台入口不再每按一次就重新呼叫 DGLI/login。
+   - 優先沿用牌路主頁已取得、背景 relay 正在使用的同一組 DG 授權 URL。
+   - 避免建立第二組 token 直接讓舊背景 relay 失效。
+   - 若背景連線仍在 DG 遊戲開啟期間掉線，只用同一 token 嘗試一次恢復，不會無限重新登入互踢。
+   - 回牌路後若仍未恢復，才重新向 TZ 取得 DG 授權。
+
+2. Web 閒置 / 休眠黑畫面保護。
+   - visibilitychange / pageshow / focus / online 時強制恢復畫面 paint。
+   - 最佳努力啟用 Screen Wake Lock（瀏覽器支援時）。
+   - 回到頁面時檢查 MT socket 與 DG SSE listener，使用既有授權做輕量恢復。
+   - Root layout 加入 mount surface watchdog；若 React root 真的被瀏覽器清空，單次自動重新整理避免永久黑屏。
+   - UI render error 由 recovery boundary 接住，不再只剩純背景。
+
+3. 不修改：DG 牌路方向修正、右上角網址打碼、唯讀連線框、今日輸贏邏輯。
+
+驗證：修改檔以 TypeScript transpileModule 做語法檢查；ZIP 完整性另測。

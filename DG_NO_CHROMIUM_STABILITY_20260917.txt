@@ -1,0 +1,8 @@
+DG NO-CHROMIUM STABILITY FIX — 2026-09-17
+
+1. DG 主頁牌路改用 Node TLS/WebSocket 輕量連線，不啟動 Chromium。
+2. 移除 Render 部署時 Chrome postinstall，降低記憶體/CPU/磁碟壓力。
+3. DG 前景 Proxy 共用同一條 raw DG WebSocket；同一 session 同時供遊戲畫面與懸浮牌路。
+4. 進 DG 不建立第二條 DG vendor WebSocket，避免同帳號互踢。
+5. MT 連線/牌路/登入邏輯未修改。
+6. /api/health 保留，可用於 Render 健康檢查。

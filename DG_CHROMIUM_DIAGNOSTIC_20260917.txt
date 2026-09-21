@@ -1,0 +1,24 @@
+DG Chromium 完整診斷版 - 2026-09-17
+
+本版目的：
+1. Render Build Command 維持：pnpm install --frozen-lockfile && pnpm build
+2. 不再阻擋 DG 頁面的圖片 / 字型 / 影音資源，讓頁面盡量比照一般 Chrome 完整初始化。
+3. Render Log 會額外顯示 Chromium DIAG，包含：
+   - Console error / warning
+   - JavaScript exception
+   - game_settings.json 請求與 HTTP 狀態
+   - Network loadingFailed 與錯誤原因
+   - WebSocket Created / Handshake Request / Handshake Response
+   - 最終頁面 URL（token/sign 已遮蔽）
+   - readyState / script 數 / iframe 數
+   - localStorage / sessionStorage 的 key 名稱（不輸出內容）
+   - Cookie 名稱（不輸出 cookie 值）
+   - navigator.webdriver / online 狀態
+4. 20 秒沒有 WebSocket 101 時，會印出 wsCreated / handshake / loadFailed 統計與最後頁面狀態。
+5. Token / sign 不會直接寫入新增的診斷 Log。
+
+部署後：
+- 登入 MT Assistant
+- 切換到 DG
+- 等 20~30 秒
+- 複製從 [DG API] start 開始，到 Chromium DIAG / 20 秒逾時為止的 Render Log。

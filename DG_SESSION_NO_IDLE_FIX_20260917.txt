@@ -1,0 +1,17 @@
+MT Assistant Web V3 - DG session fix / no idle UI recovery
+
+This build intentionally removes all idle/black-screen recovery changes that were added in SESSION-IDLE-FIX:
+- no visibilitychange/pageshow/focus forced repaint
+- no Wake Lock
+- no UI watchdog / blank-root reload
+- no React UI recovery boundary
+- no root DOM style rewriting
+- no idle-specific global CSS
+
+Kept from the DG session work:
+- DG platform reuses the already-authorized DG URL when available instead of always requesting a second DGLI login
+- same-token background relay recovery attempt while DG game is open
+- formal re-authorization only after returning to road view when same-token recovery cannot restore data
+- existing DG road, connection-center masking, dedupe, and wallet-return changes remain intact
+
+The goal of this build is to stop altering the display lifecycle while preserving the DG session changes.

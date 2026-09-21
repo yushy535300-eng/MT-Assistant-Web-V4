@@ -1,0 +1,13 @@
+DG 前景載入修正（2026-09-17）
+
+本版只修改 DG，MT 邏輯不變。
+
+修正重點：
+1. 前景 DG 不再由 Render 使用原始 TLS socket 直接連 vendor WSS。
+2. 保留已成功連線的 Chromium DG WebSocket 作為唯一 upstream session。
+3. 前景 DG 頁面只連本站 local WebSocket；前景 binary 指令轉送到既有 Chromium WebSocket。
+4. Chromium 收到的 DG binary frame 同時提供牌路 relay 與前景 DG 頁面。
+5. 補齊 /vd、/apidata、/giftrobot DG 同源資源代理路徑。
+6. 離開 DG 後不重啟第二個 Chromium，原背景牌路 session 繼續使用。
+
+目標：避免 DG 原生頁面與懸浮背景 relay 搶登入，同時修正前景 DG 卡在 loading 的問題。

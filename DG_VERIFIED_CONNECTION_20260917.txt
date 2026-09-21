@@ -1,0 +1,55 @@
+DG VERIFIED CONNECTION FLOW - 2026-09-17
+
+This build no longer hard-codes one historical DG launch host or assumes every DG session is Taiwan type=5.
+
+Verified from the supplied captures:
+1. TZ launch API:
+   POST https://www.tz6868.cc/api/v2/game/DGLI/login
+   -> data.game_url = https://<dynamic-dg-host>/ddnewpc/direct1.html?token=<one-time-token>
+
+2. DG index URLs observed:
+   - new-dd-cn.20299999.com ... index.html?...&type=1&return=dggw.vip
+   - new-dd-cn.dingdangmail.com ... index.html?...&type=5&return=dggw.vip
+
+3. The supplied DG bundle selects WSS by `type` exactly as follows:
+   0 -> game_wss
+   1 -> game_wss_overseas
+   2 -> game_wss_my
+   3 -> game_wss_th
+   4 -> game_wss_vn
+   5 -> game_wss_tw
+
+4. Captured examples therefore resolve to:
+   type=1 -> wss://hwdata-new.taxyss.com
+   type=5 -> wss://appatw.kindlestone.com
+
+5. DG WS sign is TripleDES ECB / PKCS7 over the raw DG token with the verified vendor key.
+   Sample token f172453425bb4258b8fc91dc89d5ddef produces exactly:
+   HWh5dOYNEJ5gLhMD2ZGYGMPoNWMlXXCxZQXkIXuI+i3HN5v/fcjYeQ==
+
+6. Captured initial protobuf commands:
+   10086 {tableId:1,type:0,object:"PC"}
+   after codeId=0:
+   45 {type:1}
+   2 {lobbyId:5,type:0}
+   5011 {type:0}
+   87 {type:1}
+   24 {type:2}
+   keepalive 99
+
+ANDROID APP MODE (preferred for DG):
+- The app launches the real one-time DG direct1 URL in an attached hidden WebView.
+- DG itself resolves direct1 -> index, chooses type/WSS, calculates sign and performs its protobuf bootstrap.
+- Because the WebSocket is created by the real DG page, the WebView sends the real DG Origin.
+- A document-start hook mirrors received DG binary frames to the outer MT UI; it does not replace DG's own connection.
+- The outer UI decodes PublicBean and reuses the existing TableCard/RoadGrid.
+
+NORMAL BROWSER MODE:
+- Uses the server relay.
+- Server now resolves the dynamic launch URL and uses the exact vendor type->WSS mapping.
+- Browser-direct fallback was removed because normal browser JS cannot override WebSocket Origin.
+
+Files changed:
+- android-tz-wrapper/app/src/main/java/com/mtassistant/tz/MainActivity.java
+- lib/dg-live.ts
+- server/dg-relay.ts

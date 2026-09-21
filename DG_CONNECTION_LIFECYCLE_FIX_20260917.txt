@@ -1,0 +1,20 @@
+DG CONNECTION LIFECYCLE FIX - 2026-09-17
+
+Scope: DG only. MT connection / MT roads / today P&L are not rewritten.
+
+Changes:
+1. DG authorization is single-flight in the browser. Concurrent callers reuse the same DGLI/login Promise.
+2. Main-page recovery reuses the existing DG game token first. It no longer requests a fresh DGLI/login immediately after one relay failure.
+3. Fresh DG authorization is rate-limited: same-token retries use backoff and a fresh login is allowed only after a sustained failure window.
+4. /api/dg/start remains idempotent per tracker session.
+5. SSE cleanup is one-shot and releases keepalive timers/subscriptions on req/res close/finish.
+6. Idle DG relays with no subscribers are swept automatically.
+7. Raw DG WebSocket buffers / fragmented frames have hard safety limits so malformed or runaway frames cannot grow memory without bound.
+8. Relay stop clears table caches, pending roads, client references, and timers.
+9. /api/health now exposes RSS and heap-used MB for Render diagnostics.
+
+Validation performed here:
+- 68 TS/TSX source files parsed with TypeScript transpileModule: 0 syntax errors.
+- ZIP integrity checked after packaging.
+
+Runtime vendor connectivity still needs Render deployment to verify the real DG WSS handshake.

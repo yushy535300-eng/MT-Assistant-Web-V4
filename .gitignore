@@ -1,0 +1,16 @@
+node_modules/
+web-dist/
+dist/
+.chrome/
+.expo/
+.env
+.env.*
+!.env.example
+.data/
+*.log
+.DS_Store
+Thumbs.db
+android-tz-wrapper/.gradle/
+android-tz-wrapper/build/
+android-tz-wrapper/app/build/
+android-tz-wrapper/local.properties
